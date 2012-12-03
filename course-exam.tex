@@ -1,0 +1,59 @@
+\documentclass[answers,addpoints,a4paper,12pt]{exam}
+\usepackage{uis-exam}
+\usepackage[pdftex]{graphicx}
+\usepackage{listings}
+
+\begin{document}
+\examcover
+ {norsk}
+ {DAT320 Operativsystemer}
+ {Prøveeksamen, November 2012}
+ {4}     %% Duration
+ {\none} %% MAY USE: \none, \calc, or \all for standard
+ {Hein Meling, tlf. (518) 32080}
+ {\none}
+ {}
+
+\begin{questions}
+
+\titledquestion{Prosesskonseptet}[10]
+%\input{exercises/process-concept}
+
+\begin{parts}
+\part[3] Beskriv kort hva en OS kjerne må gjøre for å veksle mellom prosesser? (context-switch)
+\begin{solution}
+OSet må lagre unna tilstanden til den kjørende prosessen (CPU registre, PC, osv) og hente frem igjen tilstanden til den nye prosessen som skal kjøres. I tillegg må CPUens data og instruksjons cacher tømmes.
+\end{solution}
+
+\begin{lstlisting}[xleftmargin=20pt,basicstyle=\footnotesize\ttfamily,language=C]
+#include <stdio.h>
+#include <unistd.h>
+int main() {
+  fork(); fork();
+  return 0;
+}	
+\end{lstlisting}
+
+\part[3] Hvor mange prosesser opprettes av C programmet ovenfor, inklusive foreldre prosessen? Forklar.
+\begin{solution}
+La foreldre prosessen kalles $p_0$. Siden $p_0$ har to \texttt{fork()} kall, så vil den opprette $p_1$ og $p_2$. Siden $p_1$ fortsetter på samme linje som $p_0$ etter \texttt{fork()}, så vil denne kalle \texttt{fork()} en gang. Dvs. $p_1$ vil opprette en prosess som vi kan kalle $p_{11}$. Totalt opprettes det 4 prosesser.
+\end{solution}
+
+\part[4] Kommunikasjon mellom to prosesser skjer ofte ved bruke av primitivene \texttt{send()} og \texttt{receive()}. Beskriv ulike former for \emph{synkronisering} som er mulig med disse to primitivene. Diskuter fordeler og ulemper med disse synkroniseringsformene.
+\begin{solution}
+\begin{itemize}
+	\item Blocking send (synchronous): Den sendende prosessen blokkeres inntil meldingen er mottatt av mottaker prosessen eller en mailbox.
+	\item Non-blocking send (asynchronous): Den sendene prosessen sender meldingen og fortsetter uten å vente på mottaker prosessen.
+	\item Blocking receive: Mottaker prosessen blokkerer inntil en melding er tilgjengelig for prosessering.
+	\item Non-blocking receive: Mottaker prosessen sjekker om det fins en melding å motta. Hvis så, så mottas meldingen. Hvis ikke, så returners \texttt{null}.
+\end{itemize}
+En fordel med synkron kommunikasjon er at det muligjør synkronisering mellom en sender og mottaker. En ulempe med blokkerende sending er: ikke all kommunikasjon trenger synkronisering mellom sender og mottaker; istedet kan meldinger leveres asynkront (typisk vil man trenge en kø mellom sender og mottaker hvis kommunikasjonen er asynkron). Message-passing systemer har typisk begge formene for synkronisering.
+\end{solution}
+\end{parts}
+
+\titledquestion{Multithreading}[20]
+%\input{exercises/multithreading}
+
+\end{questions}
+
+\end{document}
