@@ -1,4 +1,4 @@
-%!TEX root = ./course-exam.tex
+% !TEX root = ./course-exam.tex
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \documentclass[answers,addpoints,a4paper,12pt]{exam}
 % \begin{document}
@@ -43,6 +43,8 @@
 \def\faculty#1{\def\VK@faculty{#1}}
 \def\VK@subject{}
 \def\subject#1{\def\VK@subject{#1}}
+\def\VK@exam{}
+\def\exam#1{\def\VK@exam{#1}}
 \def\VK@date{}
 \def\date#1{\def\VK@date{#1}}
 \def\VK@duration{}
@@ -68,25 +70,41 @@
 \def\VK@solu{}
 \def\solu#1{\def\VK@solu{#1}}
 
+
+\def\VK@title{}
+\def\title#1{\def\VK@title{#1}}
+\def\VK@deadline{}
+\def\deadline#1{\def\VK@deadline{#1}}
+\def\VK@effort{}
+\def\effort#1{\def\VK@effort{#1}}
+\def\VK@exercise{}
+\def\exercise#1{\def\VK@exercise{#1}}
+
 % ----------------------------------------------------------------------------
 % Predefined variables
 % ----------------------------------------------------------------------------
 
 \organization{\iflanguage{norsk}{Universitetet i Stavanger}{University of Stavanger}}
 \faculty{\iflanguage{norsk}{Det teknisk-\\naturvitenskapelige fakultet}{Faculty of Science\\ and Technology}}
-\subject{\iflanguage{norsk}{Eksamen i emne:}{Exam in subject:}}
-\date{\iflanguage{norsk}{Dato:}{Date:}}
-\duration{\iflanguage{norsk}{Varighet:}{Duration:}}
-\remedies{\iflanguage{norsk}{Tillatte hjelpemidler:}{Allowed remedies:}}
-\questset{\iflanguage{norsk}{Oppgavesettet består av:}{The exam consists of:}}
-\contact{\iflanguage{norsk}{Kontaktperson under eksamen:}{Contact during exam:}}
-\remarks{\iflanguage{norsk}{Merknader:}{Remarks:}}
-\attach{\iflanguage{norsk}{Vedlegg:}{Attachments:}}
+\subject{\iflanguage{norsk}{ i emne}{ in subject}}
+\exam{\iflanguage{norsk}{Eksamen}{Exam}}
+\date{\iflanguage{norsk}{Dato}{Date}}
+\duration{\iflanguage{norsk}{Varighet}{Duration}}
+\remedies{\iflanguage{norsk}{Tillatte hjelpemidler}{Allowed remedies}}
+\questset{\iflanguage{norsk}{Oppgavesettet består av}{The exam consists of}}
+\contact{\iflanguage{norsk}{Kontaktperson under eksamen}{Contact during exam}}
+\remarks{\iflanguage{norsk}{Merknader}{Remarks}}
+\attach{\iflanguage{norsk}{Vedlegg}{Attachments}}
 \questionson{\iflanguage{norsk}{oppgaver på }{exercises on }}
 \pages{\iflanguage{norsk}{sider}{pages}}
 \dur{\iflanguage{norsk}{timer}{hours}}
 \quest{\iflanguage{norsk}{Oppgave}{Question}}
 \solu{\iflanguage{norsk}{Løsning}{Solution}}
+
+\title{\iflanguage{norsk}{Tittel}{Title}}
+\deadline{\iflanguage{norsk}{Tidsfrist}{Deadline}}
+\effort{\iflanguage{norsk}{Forventet tidsbruk}{Expected effort}}
+\exercise{\iflanguage{norsk}{Øving}{Exercise}}
 
 % ----------------------------------------------------------------------------
 % Predefined commands
@@ -100,10 +118,10 @@
 \newcommand{\figref}[1]{\iflanguage{norsk}{figur~\ref{#1}}{Figure~\ref{#1}}}
 \newcommand{\delref}[1]{\iflanguage{norsk}{deloppgave~(\ref{#1})}{part~(\ref{#1})}}
 
-\def\nynorsk{\remedies{Tillatne hjelpemiddel:}%%
-             \duration{Lengd:}%%
-             \remarks{Merknadar:}%%
-             \questset{Oppgåvesettet er samansett av:}%%
+\def\nynorsk{\remedies{Tillatne hjelpemiddel}%%
+             \duration{Lengd}%%
+             \remarks{Merknadar}%%
+             \questset{Oppgåvesettet er samansett av}%%
              \quest{Oppgåve}%%
              \solu{Løysing}}
 
@@ -131,18 +149,54 @@
 \end{tabular}
 {\scshape
 \begin{tabular}{ll}
-\VK@subject  & {\bfseries #2} \\
-\VK@date     & {\bfseries #3} \\
-\VK@duration & {\bfseries #4 \VK@dur} \\
-\VK@remedies & {\bfseries #5} \\
-\VK@questset & {\bfseries \numquestions{} \VK@questionson \numpages{} \VK@pages} \\
-\VK@contact  & {\bfseries #6} \\
+\VK@exam \VK@subject: & {\bfseries #2} \\
+\VK@date:             & {\bfseries #3} \\
+\VK@duration:         & {\bfseries #4 \VK@dur} \\
+\VK@remedies:         & {\bfseries #5} \\
+\VK@questset:         & {\bfseries \numquestions{} \VK@questionson \numpages{} \VK@pages} \\
+\VK@contact:          & {\bfseries #6} \\
 \end{tabular}
 }\\
 \begin{tabular}{lp{12cm}}
-{\scshape\VK@remarks}  & #7 \\
-{\scshape\VK@attach}   & #8 \\
+{\scshape\VK@remarks:} & #7 \\
+{\scshape\VK@attach:}  & #8 \\
 \end{tabular}
+\begin{center}
+\linethickness{0.3mm}
+\line(10,0){450}
+\end{center}
+\pointname{\%}
+\qformat{{\large\bfseries\VK@quest~\thequestion: \thequestiontitle~(\thepoints)\hfill}}
+% \qformat{{\large\bfseries\VK@quest~\thequestion: \thequestiontitle~(\totalpoints{}/\numpoints)\hfill}}
+\renewcommand{\solutiontitle}{\noindent\textbf{\VK@solu:}\enspace}
+}
+
+% ----------------------------------------------------------------------------
+% Macro: exercisecover
+% Parameters: subject (number and name), exercise number, deadline,
+%             expected effort required, remarks
+% ----------------------------------------------------------------------------
+
+\newcommand{\exercisecover}[7]{
+\selectlanguage{#1}
+\newcommand{\labnum}{#3}
+\noindent{\scshape
+\begin{tabular}{lp{8cm}}
+\VK@exercise \VK@subject:   & {\bfseries #2} \\
+\VK@title:                  & {\bfseries Lab #3: #4} \\
+\VK@deadline:               & {\bfseries #5} \\
+\VK@effort:                 & {\bfseries #6 \VK@dur} \\
+\VK@remarks:                & #7 \\
+\end{tabular}
+}
+\begin{tabular}{c}
+\includegraphics[width=28mm]{\VK@logofile}\vspace{0.2cm} \\
+{\scriptsize\sffamily
+\begin{minipage}[c]{2.3cm}
+\centering\VK@faculty
+\end{minipage}\vspace{.6cm}}
+\end{tabular}
+\vspace{-1cm}
 \begin{center}
 \linethickness{0.3mm}
 \line(10,0){450}
@@ -152,9 +206,4 @@
 % ----------------------------------------------------------------------------
 % Tuning exam.cls parameters
 % ----------------------------------------------------------------------------
-
-\pointname{\%}
-\qformat{{\large\bfseries\VK@quest~\thequestion: \thequestiontitle~(\thepoints)\hfill}}
-\renewcommand{\solutiontitle}{\noindent\textbf{\VK@solu:}\enspace}
-
 
